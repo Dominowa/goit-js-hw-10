@@ -3,14 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Homework 10</title>
+    <title>Cat Breed Search</title>
   </head>
   <body>
-    <select class="breed-select"></select>
-    <p class="loader">Loading data, please wait...</p>
-    <p class="error">Oops! Something went wrong! Try reloading the page!</p>
-    <div class="cat-info"></div>
+    <div class="container">
+      <h1>Cat Breed Search</h1>
+      <select class="breed-select" id="breedSelect"></select>
+      <p class="loader">Loading...</p>
+      <div class="cat-info">
+        <img src="./image/default-cat-image.jpg" alt="Default Cat Image" />
 
-    <script src="js/index.js" type="module"></script>
+        <h2 class="cat-name">Breed Name</h2>
+        <p class="cat-description">Breed Description</p>
+        <p class="cat-temperament">Breed Temperament</p>
+      </div>
+      <p class="error">Error loading data</p>
+    </div>
+    <script type="module" src="./js/app.js"></script>
   </body>
 </html>
