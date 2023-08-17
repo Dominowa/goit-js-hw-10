@@ -1,6 +1,6 @@
 import axios from 'axios';
 import SlimSelect from 'slim-select';
-
+import 'slim-select/dist/slimselect.css';
 const breedSelect = document.getElementById('breedSelect');
 const loader = document.querySelector('.loader');
 const catInfo = document.querySelector('.cat-info');
