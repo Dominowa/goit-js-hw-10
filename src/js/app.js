@@ -1,5 +1,6 @@
 import axios from 'axios';
-import '../css/styles.css';
+import SlimSelect from 'slim-select';
+
 const breedSelect = document.getElementById('breedSelect');
 const loader = document.querySelector('.loader');
 const catInfo = document.querySelector('.cat-info');
@@ -20,7 +21,6 @@ function fetchBreeds() {
       throw error;
     });
 }
-
 function fetchCatByBreed(breedId) {
   const url = `https://api.thecatapi.com/v1/images/search?breed_ids=${breedId}`;
   return axios
@@ -31,14 +31,43 @@ function fetchCatByBreed(breedId) {
     });
 }
 
-function populateBreeds(breeds) {
-  breeds.forEach(breed => {
-    const option = document.createElement('option');
-    option.value = breed.id;
-    option.textContent = breed.name;
-    breedSelect.appendChild(option);
+document.addEventListener('DOMContentLoaded', () => {
+  const slimSelect = new SlimSelect({
+    select: '#breedSelect',
+    searchingText: 'Searching...',
+    placeholder: 'Select a breed',
+    allowDeselect: true,
   });
-}
+
+  fetchBreeds()
+    .then(breeds => {
+      breeds.forEach(breed => {
+        slimSelect.add({
+          text: breed.name,
+          value: breed.id,
+        });
+      });
+    })
+    .catch(() => {
+      showError();
+    });
+
+  breedSelect.addEventListener('change', event => {
+    const selectedBreedId = event.target.value;
+    hideElements();
+    loader.style.display = 'block';
+    fetchCatByBreed(selectedBreedId)
+      .then(cat => {
+        displayCatInfo(cat);
+      })
+      .catch(() => {
+        showError();
+      })
+      .finally(() => {
+        loader.style.display = 'none';
+      });
+  });
+});
 
 function displayCatInfo(cat) {
   catImage.src = cat.url;
@@ -49,7 +78,6 @@ function displayCatInfo(cat) {
 }
 
 function hideElements() {
-  breedSelect.style.display = 'none';
   loader.style.display = 'none';
   catInfo.style.display = 'none';
   error.style.display = 'none';
@@ -58,28 +86,3 @@ function hideElements() {
 function showError() {
   error.style.display = 'block';
 }
-
-breedSelect.addEventListener('change', event => {
-  const selectedBreedId = event.target.value;
-  hideElements();
-  loader.style.display = 'block';
-  fetchCatByBreed(selectedBreedId)
-    .then(cat => {
-      displayCatInfo(cat);
-    })
-    .catch(() => {
-      showError();
-    })
-    .finally(() => {
-      loader.style.display = 'none';
-    });
-});
-
-fetchBreeds()
-  .then(breeds => {
-    populateBreeds(breeds);
-    breedSelect.style.display = 'block';
-  })
-  .catch(() => {
-    showError();
-  });
