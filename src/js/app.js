@@ -1,6 +1,6 @@
 import axios from 'axios';
 import SlimSelect from 'slim-select';
-import 'slim-select/dist/slimselect.css';
+// import 'slim-select/dist/slimselect.css';
 const breedSelect = document.getElementById('breedSelect');
 const loader = document.querySelector('.loader');
 const catInfo = document.querySelector('.cat-info');
@@ -21,6 +21,7 @@ function fetchBreeds() {
       throw error;
     });
 }
+
 function fetchCatByBreed(breedId) {
   const url = `https://api.thecatapi.com/v1/images/search?breed_ids=${breedId}`;
   return axios
@@ -32,20 +33,19 @@ function fetchCatByBreed(breedId) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const slimSelect = new SlimSelect({
-    select: '#breedSelect',
-    searchingText: 'Searching...',
-    placeholder: 'Select a breed',
-    allowDeselect: true,
-  });
-
   fetchBreeds()
     .then(breeds => {
-      breeds.forEach(breed => {
-        slimSelect.add({
-          text: breed.name,
-          value: breed.id,
-        });
+      const options = breeds.map(breed => ({
+        value: breed.id,
+        text: breed.name,
+      }));
+      breedSelect.innerHTML = '';
+      const slimSelect = new SlimSelect({
+        select: '#breedSelect',
+        searchingText: 'Searching...',
+        placeholder: 'Select a breed',
+        allowDeselect: true,
+        data: options,
       });
     })
     .catch(() => {
